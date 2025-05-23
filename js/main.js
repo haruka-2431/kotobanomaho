@@ -21,35 +21,31 @@ gsap.set(openingImg, { autoAlpha: 0 });
 
 // ページ読み込み完了時にアニメーションを開始させる
 window.addEventListener("load", () => {
- 
   const openingMove = gsap.timeline();
 
   openingMove
+    .to(openingImg, {
+      autoAlpha: 1,
+      duration: 1.2,
+      ease: "power2.inOut",
+    })
     .to(
-      openingImg, 
+      openingText,
+      {
+        y: 10,
+        duration: 1.2,
+        ease: "power2.inOut",
+      },
+      "+=0.33"
+    )
+    .to(
+      openingText,
       {
         autoAlpha: 1,
-        duration: 1.2, 
-        ease: "power2.inOut", 
-      }
-    )
-    .to(
-      openingText, 
-      {
-        y: 10, 
-        duration: 1.2, 
-        ease: "power2.inOut", 
-      },
-      "+=0.33" 
-    )
-    .to(
-      openingText, 
-      {
-        autoAlpha: 1, 
         duration: 1.1,
-        ease: "power2.inOut", 
+        ease: "power2.inOut",
       },
-      "-=1.33" 
+      "-=1.33"
     )
     .to(opening, { display: "none", duration: 1.2 })
     .set("#main-content", { display: "block" });
@@ -70,7 +66,6 @@ window.addEventListener("load", () => {
   message3.textContent = "落ち込んでいる";
   message4.textContent = "気づきがほしい";
 });
-
 
 const normalQuotes = {
   やる気を出したい: [
@@ -204,7 +199,6 @@ const normalQuotes = {
     },
   ],
 };
-
 
 const loveQuotes = {
   愛について: [
@@ -384,19 +378,24 @@ function showRandomQuote() {
       const quoteDisplayDiv = document.createElement("div");
       quoteDisplayDiv.id = "dynamic-quote-display";
       quoteDisplayDiv.className =
-        "px-4 h-dvh w-full max-w-[800px] absolute top-1/2 -translate-y-[5%] left-1/2 と -translate-x-[50%]";
+        "px-4 h-dvh w-full max-w-[880px] absolute top-1/2 -translate-y-[5%] left-1/2 と -translate-x-[50%] text-center";
 
       // 名言テキスト
       const quoteText = document.createElement("span");
       quoteText.id = "quote-text";
       if (currentTheme === "love") {
-        quoteText.style.background = "linear-gradient(transparent 50%, #ffe0e0 70%)";
+        quoteText.style.textDecoration = "underline";
+        quoteText.style.textDecorationColor = "#ffc0cb";
       } else {
-        quoteText.style.background = "linear-gradient(transparent 50%, #FFF6CB 70%)";
+        quoteText.style.textDecoration = "underline";
+        quoteText.style.textDecorationColor = "#ffd700";
       }
       quoteText.style.boxDecorationBreak = "clone";
-      quoteText.className = "md:text-lg lg:text-3xl text-center";
-      quoteText.style.padding = "0.2em";
+      quoteText.className = "md:text-lg lg:text-3xl text-left";
+      quoteText.style.padding = "0.3em";
+      quoteText.style.display = "inline-block";
+      quoteText.style.textAlign = "left";
+      quoteText.style.lineHeight = "1.6";
 
       // 著者テキスト
       const quoteAuthor = document.createElement("p");
@@ -435,16 +434,16 @@ function showRandomQuote() {
 
       // 初期状態で名言を左に隠す＆透明にする
       gsap.set(quoteText, {
-        x: "-100%", 
-        opacity: 0, 
+        y: "-100%",
+        opacity: 0,
       });
 
       // 左からスライドして表示
       gsap.to(quoteText, {
-        x: "0%",
-        opacity: 1, 
-        duration: 2.5, 
-        ease: "power2.out", 
+        y: "0%",
+        opacity: 1,
+        duration: 2.5,
+        ease: "power2.out",
         onComplete: () => {
           gsap.to(quoteAuthor, {
             opacity: 1,
@@ -488,7 +487,6 @@ themeToggle.addEventListener("change", function () {
     document.getElementById("smile-02").src = "img/love02.png";
     document.getElementById("smile-03").src = "img/love03.png";
     document.getElementById("smile-04").src = "img/love04.png";
-    
   } else {
     // ノーマルテーマに戻す
     document.body.style.backgroundColor = "#fffde7";
