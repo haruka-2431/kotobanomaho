@@ -36,7 +36,7 @@ window.addEventListener("load", () => {
         duration: 1.2,
         ease: "power2.inOut",
       },
-      "+=0.33"
+      "+=0.33",
     )
     .to(
       openingText,
@@ -45,10 +45,11 @@ window.addEventListener("load", () => {
         duration: 1.1,
         ease: "power2.inOut",
       },
-      "-=1.33"
+      "-=1.33",
     )
     .to(opening, { display: "none", duration: 1.2 })
     .set("#main-content", { display: "block" });
+  showRandomQuote();
 });
 
 // メッセージのpタグを取得
@@ -360,14 +361,15 @@ const smileMap = () => {
 
 // 各ボタンと紐づけて名言を表示するための関数
 function showRandomQuote() {
-  const map = smileMap();
-  Object.keys(map).forEach((smileId) => {
+  const smileIds = ["smile-pink", "smile-yellow", "smile-green", "smile-blue"];
+  smileIds.forEach((smileId) => {
     const smileElement = document.getElementById(smileId);
-    const { category } = map[smileId];
 
     const mainContent = document.getElementById("main-content");
 
     smileElement.addEventListener("click", () => {
+      const map = smileMap();
+      const { category } = map[smileId];
       mainContent.style.display = "none";
       mainContent.classList.add("hidden");
 
@@ -378,7 +380,7 @@ function showRandomQuote() {
       const quoteDisplayDiv = document.createElement("div");
       quoteDisplayDiv.id = "dynamic-quote-display";
       quoteDisplayDiv.className =
-        "px-4 h-dvh w-full max-w-[880px] absolute top-1/2 -translate-y-[5%] left-1/2 と -translate-x-[50%] text-center";
+        "px-4 h-dvh w-full max-w-[880px] absolute top-1/2 -translate-y-[5%] left-1/2 -translate-x-[50%] text-center";
 
       // 名言テキスト
       const quoteText = document.createElement("span");
@@ -429,36 +431,34 @@ function showRandomQuote() {
       // 内容をセットする
       quoteText.innerHTML = `<span style="color: #666;">「${selected.text}」</span>`;
       quoteAuthor.innerHTML = `<span style="font-size: 0.9em;text-align: right; display: block; margin-top: 16px;">— ${selected.author}</span>`;
-      quoteAuthor.style.opacity = 0;
-      backButton.style.opacity = 0;
+      gsap.set(quoteAuthor, { autoAlpha: 0 });
+      gsap.set(backButton, { autoAlpha: 0 });
 
       // 初期状態で名言を左に隠す＆透明にする
-      gsap.set(quoteText, {
-        y: "-100%",
-        opacity: 0,
-      });
-
-      // 左からスライドして表示
-      gsap.to(quoteText, {
-        y: "0%",
-        opacity: 1,
+      gsap.fromTo(
+        quoteText,
+        { y: "-100%", autoAlpha: 0 },
+        {y: "0%",
+        autoAlpha: 1,
         duration: 2.5,
         ease: "power2.out",
+        force3D: true, 
         onComplete: () => {
           gsap.to(quoteAuthor, {
-            opacity: 1,
+            autoAlpha: 1,
             duration: 1,
             ease: "power2.out",
           });
 
           gsap.to(backButton, {
-            opacity: 1,
+            autoAlpha: 1,
             duration: 1.7,
             ease: "power2.out",
             delay: 0.5,
           });
         },
-      });
+      }
+      )
 
       // 戻るボタンで元に戻す
       backButton.addEventListener("click", () => {
@@ -502,5 +502,4 @@ themeToggle.addEventListener("change", function () {
     document.getElementById("smile-03").src = "img/smile03.png";
     document.getElementById("smile-04").src = "img/smile04.png";
   }
-  showRandomQuote();
 });
